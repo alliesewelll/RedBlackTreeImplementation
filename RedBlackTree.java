@@ -18,8 +18,8 @@ public class RedBlackTree{
         RBNode(int data) {
             this.data = data;
             this.color = Color.RED; // New node is red by default
-            left = right = parent = null;
-            left.color = right.color = Color.BLACK; // NIL children are black
+            this.left = this.right = this.parent = null;
+            //left.color = right.color = Color.BLACK; // NIL children are black
         }
     }
 
