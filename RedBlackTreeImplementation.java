@@ -1,13 +1,16 @@
+import java.util.*;
+
 class RedBlackTree{
 
-    private RBNode NIL;
-    private RBNode root;
+    RBNode NIL;
+    RBNode root;
+    private int treeSize = 0;
     
-    enum Color {
+    public enum Color {
         RED, BLACK
     }
 
-    class RBNode{
+    public class RBNode{
         int data;
         Color color;
         RBNode left, right, parent;
@@ -33,6 +36,7 @@ class RedBlackTree{
         newNode.left = newNode.right = NIL;
         bstInsert(newNode);
         fixInsert(newNode); 
+        treeSize++;
     }
 
     public void bstInsert(RBNode newNode) {
@@ -132,5 +136,41 @@ class RedBlackTree{
         x.right = y;
         y.parent = x;
     }
+
+    public boolean contains(int key) {
+        return searchNode(key) != NIL;
+    }
+
+    private RBNode searchNode(int key) {
+        RBNode current = root;
+
+        while (current != NIL) {
+            if (key == current.data) {
+                return current;
+            } else if (key < current.data) {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
+        }
+        return NIL;
+    }
+
+    public int size() {
+        return treeSize;
+    }
+
+    public List<Integer> inOrder() {
+        List<Integer> result = new ArrayList<>();
+        inOrderHelper(root, result);
+        return result;
+    }
+
+private void inOrderHelper(RBNode node, List<Integer> list) {
+    if (node == NIL) return;
+    inOrderHelper(node.left, list);
+    list.add(node.data);
+    inOrderHelper(node.right, list);
+}
     
 }
