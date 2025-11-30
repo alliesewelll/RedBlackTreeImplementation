@@ -1,6 +1,6 @@
 import java.util.*;
 
-class RedBlackTree{
+public class RedBlackTree{
 
     RBNode NIL;
     RBNode root;
