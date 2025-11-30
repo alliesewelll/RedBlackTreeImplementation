@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import java.util.*;
 
-public class RedBlackTreeImplementationTest {
+public class RedBlackTreeTest {
     @Test
     public void testEmptyTree() {
         RedBlackTree t = new RedBlackTree();
