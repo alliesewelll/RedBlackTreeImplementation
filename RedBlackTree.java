@@ -156,6 +156,123 @@ public class RedBlackTree{
         return NIL;
     }
 
+    public RBNode delete(int key) {
+        RBNode nodeToDelete = searchNode(key);
+        if (nodeToDelete == NIL)
+        {
+            return NIL;
+        }
+        RBNode y = nodeToDelete;
+        RBNode x;
+        Color yOriginalColor = y.color;
+
+        // z has no left child
+        if (nodeToDelete.left == NIL) {
+            x = nodeToDelete.right;
+            transplant(nodeToDelete, nodeToDelete.right);
+        // z has no right child
+        } else if (nodeToDelete.right == NIL) {
+            x = nodeToDelete.left;
+            transplant(nodeToDelete, nodeToDelete.left);
+        // z has two children
+        } else {
+            y = minimum(nodeToDelete.right);
+            yOriginalColor = y.color;
+            x = y.right;
+            if (y.parent == nodeToDelete) {
+                x.parent = y;
+            } else {
+                transplant(y, y.right);
+                y.right = nodeToDelete.right;
+                y.right.parent = y;
+            }
+            transplant(nodeToDelete, y);
+            y.left = nodeToDelete.left;
+            y.left.parent = y;
+            y.color = nodeToDelete.color;
+        }
+
+        if (yOriginalColor == Color.BLACK) {
+            fixDelete(x);
+        }
+        treeSize--;
+
+        return nodeToDelete;
+    }
+
+    private void transplant(RBNode u, RBNode v) {
+        if (u.parent == NIL) {
+            root = v;
+        } else if (u == u.parent.left) {
+            u.parent.left = v;
+        } else {
+            u.parent.right = v;
+        }
+        v.parent = u.parent;
+    }
+
+    private RBNode minimum(RBNode node) {
+        while (node.left != NIL) {
+            node = node.left;
+        }
+        return node;
+    }
+
+    private void fixDelete(RBNode x) {
+        while (x != root && x.color == Color.BLACK) {
+            if (x == x.parent.left) {
+                RBNode w = x.parent.right;
+                if (w.color == Color.RED) {
+                    w.color = Color.BLACK;
+                    x.parent.color = Color.RED;
+                    leftRotate(x.parent);
+                    w = x.parent.right;
+                }
+                if (w.left.color == Color.BLACK && w.right.color == Color.BLACK) {
+                    w.color = Color.RED;
+                    x = x.parent;
+                } else {
+                    if (w.right.color == Color.BLACK) {
+                        w.left.color = Color.BLACK;
+                        w.color = Color.RED;
+                        rightRotate(w);
+                        w = x.parent.right;
+                    }
+                    w.color = x.parent.color;
+                    x.parent.color = Color.BLACK;
+                    w.right.color = Color.BLACK;
+                    leftRotate(x.parent);
+                    x = root;
+                }
+            } else {
+                RBNode w = x.parent.left;
+                if (w.color == Color.RED) {
+                    w.color = Color.BLACK;
+                    x.parent.color = Color.RED;
+                    rightRotate(x.parent);
+                    w = x.parent.left;
+                }
+                if (w.right.color == Color.BLACK && w.left.color == Color.BLACK) {
+                    w.color = Color.RED;
+                    x = x.parent;
+                } else {
+                    if (w.left.color == Color.BLACK) {
+                        w.right.color = Color.BLACK;
+                        w.color = Color.RED;
+                        leftRotate(w);
+                        w = x.parent.left;
+                    }
+                    w.color = x.parent.color;
+                    x.parent.color = Color.BLACK;
+                    w.left.color = Color.BLACK;
+                    rightRotate(x.parent);
+                    x = root;
+                }
+            }
+        }
+        x.color = Color.BLACK;
+    }
+
     public int size() {
         return treeSize;
     }
